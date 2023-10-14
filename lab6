@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_STRAWS 100
+
+struct RestaurantOrder {
+    int tableNumber;
+    char dishName[100];
+    float dishPrice;
+    char waiterName[50];
+};
+
+void printOrder(struct RestaurantOrder order) {
+    printf("Table %d: %s ($%.2f) served by %s\n", order.tableNumber, order.dishName, order.dishPrice, order.waiterName);
+}
+
+void orderByWaiter(struct RestaurantOrder orders[], int numOrders, char waiterName[]) {
+    printf("\nOrders by %s:\n", waiterName);
+    for (int i = 0; i < numOrders; i++) {
+        if (strcmp(orders[i].waiterName, waiterName) == 0) {
+            printOrder(orders[i]);
+        }
+    }
+}
+
+void orderByPrice(struct RestaurantOrder orders[], int numOrders) {
+    printf("\nOrders sorted by price:\n");
+    for (int i = 0; i < numOrders - 1; i++) {
+        for (int j = 0; j < numOrders - i - 1; j++) {
+            if (orders[j].dishPrice > orders[j + 1].dishPrice) {
+                struct RestaurantOrder temp = orders[j];
+                orders[j] = orders[j + 1];
+                orders[j + 1] = temp;
+            }
+        }
+    }
+    for (int i = 0; i < numOrders; i++) {
+        printOrder(orders[i]);
+    }
+}
+
+int main() {
+    struct RestaurantOrder orders[MAX_STRAWS];
+    int numOrders = 0;
+
+    printf("Enter restaurant orders:\n");
+    while (1) {
+        if (numOrders >= MAX_STRAWS) {
+            printf("Max number of orders reached.\n");
+            break;
+        }
+
+        struct RestaurantOrder order;
+        printf("Table number: ");
+        scanf("%d", &order.tableNumber);
+        printf("Dish name: ");
+        scanf(" %[^\n]s", order.dishName);  // Read a string with spaces
+        printf("Dish price: $");
+        scanf("%f", &order.dishPrice);
+        printf("Waiter's last name: ");
+        scanf(" %[^\n]s", order.waiterName);
+
+        orders[numOrders++] = order;
+
+        char another;
+        printf("Enter another order? (y/n): ");
+        scanf(" %c", &another);
+
+        if (another == 'n' || another == 'N') {
+            break;
+        }
+    }
+
+    char searchDishName[100];
+    printf("\nEnter the name of the dish to search for: ");
+    scanf(" %[^\n]s", searchDishName);
+
+    // Display all orders and orders for the specified dish name
+    printf("\nAll orders:\n");
+    for (int i = 0; i < numOrders; i++) {
+        printOrder(orders[i]);
+    }
+
+    int found = 0;
+    printf("\nOrders for %s:\n", searchDishName);
+    for (int i = 0; i < numOrders; i++) {
+        if (strcmp(orders[i].dishName, searchDishName) == 0) {
+            found = 1;
+            printOrder(orders[i]);
+        }
+    }
+
+    if (!found) {
+        printf("No orders for %s found.\n", searchDishName);
+    }
+
+    // Sort orders by price
+    orderByPrice(orders, numOrders);
+
+    // Group and display orders by waiter
+    char waiters[100][50];
+    int numWaiters = 0;
+    for (int i = 0; i < numOrders; i++) {
+        int isNewWaiter = 1;
+        for (int j = 0; j < numWaiters; j++) {
+            if (strcmp(orders[i].waiterName, waiters[j]) == 0) {
+                isNewWaiter = 0;
+                break;
+            }
+        }
+        if (isNewWaiter) {
+            strcpy(waiters[numWaiters], orders[i].waiterName);
+            numWaiters++;
+        }
+    }
+
+    for (int i = 0; i < numWaiters; i++) {
+        orderByWaiter(orders, numOrders, waiters[i]);
+    }
+
+    return 0;
+}
