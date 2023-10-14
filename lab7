@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Структура, що представляє запис про страву в ресторані
+struct RestaurantItem {
+    int tableNumber;
+    char dishName[100];
+    float dishPrice;
+    char waiterLastName[50];
+};
+
+// Функція для вводу даних про страви
+void inputData(struct RestaurantItem* items, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("Введіть дані для столу №%d:\n", i + 1);
+        items[i].tableNumber = i + 1;
+
+        printf("Назва страви: ");
+        scanf("%s", items[i].dishName);
+
+        printf("Ціна страви: ");
+        scanf("%f", &items[i].dishPrice);
+
+        printf("Прізвище офіціанта: ");
+        scanf("%s", items[i].waiterLastName);
+    }
+}
+
+// Функція для сортування за прізвищем офіціанта
+void sortByWaiterLastName(struct RestaurantItem* items, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (strcmp(items[j].waiterLastName, items[j + 1].waiterLastName) > 0) {
+                struct RestaurantItem temp = items[j];
+                items[j] = items[j + 1];
+                items[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Функція для сортування за зростанням ціни страви
+void sortByDishPrice(struct RestaurantItem* items, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (items[j].dishPrice > items[j + 1].dishPrice) {
+                struct RestaurantItem temp = items[j];
+                items[j] = items[j + 1];
+                items[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Функція для виводу інформації про столи
+void printItems(struct RestaurantItem* items, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("Стіл №%d:\n", items[i].tableNumber);
+        printf("Назва страви: %s\n", items[i].dishName);
+        printf("Ціна страви: %.2f\n", items[i].dishPrice);
+        printf("Прізвище офіціанта: %s\n", items[i].waiterLastName);
+    }
+}
+
+// Функція для пошуку страви за назвою
+void searchByDishName(struct RestaurantItem* items, int size, char* name) {
+    int found = 0;
+    for (int i = 0; i < size; i++) {
+        if (strcmp(items[i].dishName, name) == 0) {
+            printf("Стіл №%d замовив страву %s\n", items[i].tableNumber, name);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("Страву з назвою %s не знайдено в жодному замовленні.\n", name);
+    }
+}
+
+int main() {
+    int size;
+    printf("Введіть кількість столів: ");
+    scanf("%d", &size);
+
+    struct RestaurantItem* items = (struct RestaurantItem*)malloc(size * sizeof(struct RestaurantItem));
+
+    // Вводимо дані
+    inputData(items, size);
+
+    // Зберігаємо дані у файл
+    FILE* file = fopen("restaurant_data.txt", "w");
+    if (file != NULL) {
+        fwrite(items, sizeof(struct RestaurantItem), size, file);
+        fclose(file);
+    } else {
+        printf("Помилка при відкритті файлу для запису даних.\n");
+    }
+
+    // Виконуємо сортування за прізвищем офіціанта
+    sortByWaiterLastName(items, size);
+
+    printf("\nДані, відсортовані за прізвищем офіціанта:\n");
+    printItems(items, size);
+
+    // Виконуємо сортування за зростанням ціни страви
+    sortByDishPrice(items, size);
+
+    printf("\nДані, відсортовані за ціною страви:\n");
+    printItems(items, size);
+
+    // Зчитуємо дані з файлу
+    file = fopen("restaurant_data.txt", "r");
+    if (file != NULL) {
+        fread(items, sizeof(struct RestaurantItem), size, file);
+        fclose(file);
+    } else {
+        printf("Помилка при відкритті файлу для зчитування даних.\n");
+    }
+
+    // Виводимо інформацію про столи
+    printf("\nІнформація про всі столи:\n");
+    printItems(items, size);
+
+    // Пошук страви за назвою
+    char searchName[100];
+    printf("\nВведіть назву страви для пошуку: ");
+    scanf("%s", searchName);
+    searchByDishName(items, size, searchName);
+
+    free(items); // Звільнюємо пам'ять
+
+    return 0;
+}
