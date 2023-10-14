@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+
+    printf("Введіть кількість рядків: ");
+    scanf("%d", &rows);
+    printf("Введіть кількість стовпців: ");
+    scanf("%d", &cols);
+
+    if (rows != 7 || cols != 7) {
+        printf("Ця програма призначена для матриці розміром 7x7.\n");
+        return 1;
+    }
+
+    int matrix[7][7];
+    int max_even[7]; // Максимальний елемент кожного парного стовпця
+    int min_odd[7];  // Мінімальний елемент кожного непарного стовпця
+
+    // Введення елементів матриці з клавіатури
+    printf("Введіть елементи матриці %d x %d:\n", rows, cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    // Ініціалізація масивів максимальних та мінімальних елементів
+    for (int i = 0; i < 7; i++) {
+        max_even[i] = matrix[0][i];
+        min_odd[i] = matrix[0][i];
+    }
+
+    // Знаходження максимальних і мінімальних елементів
+    for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 7; i++) {
+            if (j % 2 == 0) {  // Парний стовпець
+                if (matrix[i][j] > max_even[j]) {
+                    max_even[j] = matrix[i][j];
+                }
+            } else {  // Непарний стовпець
+                if (matrix[i][j] < min_odd[j]) {
+                    min_odd[j] = matrix[i][j];
+                }
+            }
+        }
+    }
+
+    // Виведення результатів
+    printf("Максимальні елементи парних стовпців:\n");
+    for (int i = 0; i < 7; i++) {
+        printf("%d ", max_even[i]);
+    }
+    printf("\n");
+
+    printf("Мінімальні елементи непарних стовпців:\n");
+    for (int i = 0; i < 7; i++) {
+        printf("%d ", min_odd[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
