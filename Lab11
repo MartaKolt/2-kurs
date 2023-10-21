@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+    printf("Введіть розміри матриці (рядки та стовпці): ");
+    scanf("%d %d", &rows, &cols);
+
+    int matrix[rows][cols];
+
+    // Введення елементів матриці
+    printf("Введіть елементи матриці:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    int A, B;
+    printf("Введіть значення A та B: ");
+    scanf("%d %d", &A, &B);
+
+    // Знайдемо кількість стовпців без нулів
+    int count = 0;
+    for (int j = 0; j < cols; j++) {
+        int hasZero = 0;
+        for (int i = 0; i < rows; i++) {
+            if (matrix[i][j] == 0) {
+                hasZero = 1;
+                break;
+            }
+        }
+        if (!hasZero) {
+            count++;
+        }
+    }
+    printf("Кількість стовпців без нулів: %d\n", count);
+
+    // Знайдемо добуток елементів менших за A, але більших за B
+    int product = 1;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] > B && matrix[i][j] < A) {
+                product *= matrix[i][j];
+            }
+        }
+    }
+    printf("Добуток елементів менших за %d, але більших за %d: %d\n", A, B, product);
+
+    // Вставимо стовпець із нулів перед останнім стовпцем
+    cols++;
+    for (int i = 0; i < rows; i++) {
+        for (int j = cols - 1; j > 0; j--) {
+            matrix[i][j] = matrix[i][j - 1];
+        }
+        matrix[i][0] = 0;
+    }
+
+    // Виведемо матрицю з новим стовпцем
+    printf("Матриця з новим стовпцем із нулів:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
