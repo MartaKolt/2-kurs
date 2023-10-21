@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+// Структура для представлення дати
+struct Date {
+    int day;
+    int month;
+    int year;
+};
+
+// Структура для представлення книги
+struct Book {
+    char title[100];
+    int num_pages;
+    float price;
+};
+
+// Структура для представлення виданої книги
+struct PublishedBook {
+    struct Book book_info;
+    char author[100];
+    struct Date publication_date;
+};
+
+// Функція для розрахунку різниці в днях між двома датами
+int daysBetweenDates(struct Date date1, struct Date date2) {
+    time_t t1, t2;
+    struct tm tm1, tm2;
+
+    tm1.tm_year = date1.year - 1900;
+    tm1.tm_mon = date1.month - 1;
+    tm1.tm_mday = date1.day;
+    tm1.tm_hour = 0;
+    tm1.tm_min = 0;
+    tm1.tm_sec = 0;
+    tm1.tm_isdst = -1;
+
+    tm2.tm_year = date2.year - 1900;
+    tm2.tm_mon = date2.month - 1;
+    tm2.tm_mday = date2.day;
+    tm2.tm_hour = 0;
+    tm2.tm_min = 0;
+    tm2.tm_sec = 0;
+    tm2.tm_isdst = -1;
+
+    t1 = mktime(&tm1);
+    t2 = mktime(&tm2);
+
+    return (int)difftime(t2, t1) / (60 * 60 * 24);
+}
+
+int main() {
+    struct PublishedBook published_book;
+
+    // Введення інформації про видану книгу
+    printf("Введіть назву книги: ");
+    scanf("%s", published_book.book_info.title);
+    printf("Введіть кількість сторінок: ");
+    scanf("%d", &published_book.book_info.num_pages);
+    printf("Введіть ціну: ");
+    scanf("%f", &published_book.book_info.price);
+    printf("Введіть автора книги: ");
+    scanf("%s", published_book.author);
+    printf("Введіть дату поступлення у друкарню (ДД ММ РРРР): ");
+    scanf("%d %d %d", &published_book.publication_date.day, &published_book.publication_date.month, &published_book.publication_date.year);
+
+    // Поточна дата
+    struct Date current_date;
+    printf("Введіть поточну дату (ДД ММ РРРР): ");
+    scanf("%d %d %d", &current_date.day, &current_date.month, &current_date.year);
+
+    // Розрахунок кількості днів у друкарні
+    int days_in_printing = daysBetweenDates(published_book.publication_date, current_date);
+
+    // Виведення інформації про видану книгу та кількість днів у друкарні
+    printf("\nІнформація про видану книгу:\n");
+    printf("Назва: %s\n", published_book.book_info.title);
+    printf("Кількість сторінок: %d\n", published_book.book_info.num_pages);
+    printf("Ціна: %.2f\n", published_book.book_info.price);
+    printf("Автор: %s\n", published_book.author);
+    printf("Дата поступлення у друкарню: %d.%02d.%d\n", published_book.publication_date.day, published_book.publication_date.month, published_book.publication_date.year);
+    printf("Кількість днів у друкарні: %d\n", days_in_printing);
+
+    return 0;
+}
