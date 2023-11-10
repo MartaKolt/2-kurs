@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+struct Book {
+    char title[100];
+    int pageCount;
+    float price;
+};
+
+void increasePageCount(struct Book *book) {
+    book->pageCount += 10;
+}
+
+void reducePrice(struct Book *book) {
+    if (book->pageCount > 100) {
+        book->price /= 2;
+    }
+}
+
+int main() {
+    // Створення об'єкта книги
+    struct Book myBook;
+
+    // Ініціалізація даних про книгу
+    printf("Введіть назву книги: ");
+    scanf("%s", myBook.title);
+
+    printf("Введіть кількість сторінок: ");
+    scanf("%d", &myBook.pageCount);
+
+    printf("Введіть ціну книги: ");
+    scanf("%f", &myBook.price);
+
+    // Виведення початкових даних
+    printf("\nПочаткові дані про книгу:\n");
+    printf("Назва: %s\n", myBook.title);
+    printf("Кількість сторінок: %d\n", myBook.pageCount);
+    printf("Ціна: %.2f\n", myBook.price);
+
+    // Збільшення кількості сторінок на 10
+    increasePageCount(&myBook);
+
+    // Зменшення ціни у два рази, якщо кількість сторінок більше 100
+    reducePrice(&myBook);
+
+    // Виведення оновлених даних
+    printf("\nОновлені дані про книгу:\n");
+    printf("Назва: %s\n", myBook.title);
+    printf("Кількість сторінок: %d\n", myBook.pageCount);
+    printf("Ціна: %.2f\n", myBook.price);
+
+    return 0;
+}
