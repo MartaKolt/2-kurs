@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+
+struct Book {
+    std::string title;
+    int pageCount;
+    float price;
+
+    // Перевантаження бінарного оператора +
+    Book operator+(const Book& other) const {
+        Book result;
+        result.title = title + " and " + other.title;
+        result.pageCount = pageCount + other.pageCount;
+        result.price = price + other.price;
+        return result;
+    }
+
+    // Перевантаження бінарного оператора <
+    bool operator<(const Book& other) const {
+        return pageCount < other.pageCount;
+    }
+
+    // Перевантаження унарного оператора ++
+    Book& operator++() {
+        pageCount++;
+        return *this;
+    }
+
+    // Перевантаження унарного оператора --
+    Book& operator--() {
+        if (pageCount > 0) {
+            pageCount--;
+        }
+        return *this;
+    }
+};
+
+void increasePageCount(Book& book) {
+    book.pageCount += 10;
+}
+
+void reducePrice(Book& book) {
+    if (book.pageCount > 100) {
+        book.price /= 2;
+    }
+}
+
+int main() {
+    // Створення об'єкта книги
+    Book myBook1, myBook2;
+
+    // Ініціалізація даних про книги
+    std::cout << "Введіть назву першої книги: ";
+    std::getline(std::cin, myBook1.title);
+
+    std::cout << "Введіть кількість сторінок першої книги: ";
+    std::cin >> myBook1.pageCount;
+
+    std::cout << "Введіть ціну першої книги: ";
+    std::cin >> myBook1.price;
+
+    std::cin.ignore(); // Очистка буфера вводу
+
+    std::cout << "Введіть назву другої книги: ";
+    std::getline(std::cin, myBook2.title);
+
+    std::cout << "Введіть кількість сторінок другої книги: ";
+    std::cin >> myBook2.pageCount;
+
+    std::cout << "Введіть ціну другої книги: ";
+    std::cin >> myBook2.price;
+
+    // Використання перевантажених операторів
+    Book combinedBook = myBook1 + myBook2;
+    std::cout << "\nОб'єднана книга:\n";
+    std::cout << "Назва: " << combinedBook.title << std::endl;
+    std::cout << "Кількість сторінок: " << combinedBook.pageCount << std::endl;
+    std::cout << "Ціна: " << combinedBook.price << std::endl;
+
+    // Використання унарних операторів
+    ++combinedBook;
+    std::cout << "\nКількість сторінок після збільшення: " << combinedBook.pageCount << std::endl;
+
+    --combinedBook;
+    std::cout << "Кількість сторінок після зменшення: " << combinedBook.pageCount << std::endl;
+
+    return 0;
+}
