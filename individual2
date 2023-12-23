@@ -1,0 +1,61 @@
+#include <iostream>
+
+class Complex {
+private:
+    int real;  // Дійсна частина
+    int imag;  // Уявна частина
+
+public:
+    // Конструктор за замовчуванням
+    Complex() : real(0), imag(0) {}
+
+    // Конструктор з параметрами
+    Complex(int r, int i) : real(r), imag(i) {}
+
+    // Метод для виведення значення комплексного числа на екран
+    void display() const {
+        std::cout << real << " + " << imag << "i";
+    }
+
+    // Метод для порівняння двох комплексних чисел
+    bool isEqual(const Complex& other) const {
+        return (real == other.real) && (imag == other.imag);
+    }
+
+    // Метод для додавання двох комплексних чисел
+    Complex add(const Complex& other) const {
+        Complex result;
+        result.real = real + other.real;
+        result.imag = imag + other.imag;
+        return result;
+    }
+};
+
+int main() {
+    // Приклад використання класу Complex
+    Complex num1(2, 3);
+    Complex num2(1, 4);
+
+    std::cout << "Число 1: ";
+    num1.display();
+    std::cout << std::endl;
+
+    std::cout << "Число 2: ";
+    num2.display();
+    std::cout << std::endl;
+
+    // Порівняння чисел
+    if (num1.isEqual(num2)) {
+        std::cout << "Числа рівні." << std::endl;
+    } else {
+        std::cout << "Числа не рівні." << std::endl;
+    }
+
+    // Додавання чисел
+    Complex sum = num1.add(num2);
+    std::cout << "Сума чисел: ";
+    sum.display();
+    std::cout << std::endl;
+
+    return 0;
+}
