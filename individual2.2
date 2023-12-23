@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+
+class Matrix {
+private:
+    std::vector<std::vector<int>> data;
+
+public:
+    // Конструктор за замовчуванням
+    Matrix() {}
+
+    // Конструктор з параметрами
+    Matrix(const std::vector<std::vector<int>>& matrixData) : data(matrixData) {}
+
+    // Конструктор копіювання
+    Matrix(const Matrix& other) : data(other.data) {}
+
+    // Перевантаження оператора додавання
+    Matrix operator+(const Matrix& other) const {
+        Matrix result;
+        result.data.resize(data.size(), std::vector<int>(data[0].size(), 0));
+
+        for (size_t i = 0; i < data.size(); ++i) {
+            for (size_t j = 0; j < data[0].size(); ++j) {
+                result.data[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // Перевантаження оператора множення на число
+    Matrix operator*(int scalar) const {
+        Matrix result;
+        result.data.resize(data.size(), std::vector<int>(data[0].size(), 0));
+
+        for (size_t i = 0; i < data.size(); ++i) {
+            for (size_t j = 0; j < data[0].size(); ++j) {
+                result.data[i][j] = data[i][j] * scalar;
+            }
+        }
+
+        return result;
+    }
+
+    // Перевантаження оператора транспонування
+    Matrix transpose() const {
+        Matrix result;
+        result.data.resize(data[0].size(), std::vector<int>(data.size(), 0));
+
+        for (size_t i = 0; i < data.size(); ++i) {
+            for (size_t j = 0; j < data[0].size(); ++j) {
+                result.data[j][i] = data[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // Виведення матриці на екран
+    void display() const {
+        for (const auto& row : data) {
+            for (int element : row) {
+                std::cout << element << ' ';
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    // Приклад використання класу Matrix
+    Matrix mat1({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+    Matrix mat2({{9, 8, 7}, {6, 5, 4}, {3, 2, 1}});
+
+    std::cout << "Матриця 1:" << std::endl;
+    mat1.display();
+
+    std::cout << "\nМатриця 2:" << std::endl;
+    mat2.display();
+
+    // Додавання матриць
+    Matrix sum = mat1 + mat2;
+    std::cout << "\nСума матриць:" << std::endl;
+    sum.display();
+
+    // Множення матриці на число
+    Matrix scaled = mat1 * 2;
+    std::cout << "\nМатриця, помножена на 2:" << std::endl;
+    scaled.display();
+
+    // Транспонування матриці
+    Matrix transposed = mat1.transpose();
+    std::cout << "\nТранспонована матриця 1:" << std::endl;
+    transposed.display();
+
+    return 0;
+}
